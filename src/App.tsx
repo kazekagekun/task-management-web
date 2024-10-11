@@ -3,7 +3,13 @@ import reactLogo from './assets/react.svg';
 import viteLogo from '/vite.svg';
 import './App.css';
 import '@mantine/core/styles.css';
-import { Button, Card, createTheme, MantineColorsTuple, MantineProvider } from '@mantine/core';
+import {
+  Button,
+  Card,
+  createTheme,
+  MantineColorsTuple,
+  MantineProvider,
+} from '@mantine/core';
 
 const myColor: MantineColorsTuple = [
   '#e6ffee',
@@ -15,13 +21,13 @@ const myColor: MantineColorsTuple = [
   '#2bdd66',
   '#1bc455',
   '#0bae4a',
-  '#00973c'
+  '#00973c',
 ];
 
 const theme = createTheme({
   colors: {
     myColor,
-  }
+  },
 });
 
 function App() {
@@ -46,11 +52,9 @@ function App() {
           Edit <code>src/App.tsx</code> and save to test HMR
         </p>
       </Card>
-      <p>
-        Click on the Vite and React logos to learn more
-      </p>
-      </MantineProvider>  
-    );
+      <p>Click on the Vite and React logos to learn more</p>
+    </MantineProvider>
+  );
 }
 
 export default App;
