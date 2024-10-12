@@ -11,7 +11,7 @@ const Button: React.FC<DefaultButtonProps> = ({
   onClick,
   ...props
 }) => (
-  <MantineButton color="teal" onClick={onClick} {...props}>
+  <MantineButton onClick={onClick} {...props}>
     {children}
   </MantineButton>
 );
