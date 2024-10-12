@@ -1,24 +1,21 @@
 import { notifications } from '@mantine/notifications';
-import { IconCheck, IconX, IconInfoCircle } from '@tabler/icons-react';
 
 type NotificationType = 'error' | 'info' | 'success';
 
 interface NotificationConfig {
   color: string;
-  icon: React.ReactNode;
+  icon?: React.ReactNode;
   title: string;
 }
 
 const notificationConfigs: Record<NotificationType, NotificationConfig> = {
-  error: { color: 'red', icon: <IconX size="1.1rem" />, title: 'Error' },
+  error: { color: 'red', title: 'Error' },
   info: {
     color: 'blue',
-    icon: <IconInfoCircle size="1.1rem" />,
     title: 'Information',
   },
   success: {
     color: 'green',
-    icon: <IconCheck size="1.1rem" />,
     title: 'Success',
   },
 };

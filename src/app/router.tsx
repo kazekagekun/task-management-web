@@ -1,6 +1,10 @@
 import { QueryClient, useQueryClient } from '@tanstack/react-query';
 import { useMemo } from 'react';
-import { RouterProvider, createBrowserRouter } from 'react-router-dom';
+import {
+  LoaderFunctionArgs,
+  RouterProvider,
+  createBrowserRouter,
+} from 'react-router-dom';
 import { AppRoot } from './routes/root';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -10,21 +14,17 @@ const createAppRouter = (queryClient: QueryClient) =>
       path: '/app',
       element: <AppRoot />,
       children: [
-        // {
-        //   path: 'discussions',
-        //   lazy: async () => {
-        //     const { DiscussionsRoute } = await import(
-        //       './routes/app/discussions/discussions'
-        //     );
-        //     return { Component: DiscussionsRoute };
-        //   },
-        //   loader: async (args: LoaderFunctionArgs) => {
-        //     const { discussionsLoader } = await import(
-        //       './routes/app/discussions/discussions'
-        //     );
-        //     return discussionsLoader(queryClient)(args);
-        //   },
-        // },
+        {
+          path: 'tasks',
+          lazy: async () => {
+            const { TasksRoute } = await import('./routes/tasks/tasks');
+            return { Component: TasksRoute };
+          },
+          loader: async (args: LoaderFunctionArgs) => {
+            const { tasksLoader } = await import('./routes/tasks/tasksLoader');
+            return tasksLoader(queryClient)(args);
+          },
+        },
       ],
     },
     // {
