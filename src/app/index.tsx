@@ -1,5 +1,8 @@
 import { AppProvider } from './provider';
+import { AppRouter } from './router';
 
 export const App = () => {
-  return <AppProvider children={undefined} />;
+  return <AppProvider>
+    <AppRouter />
+  </AppProvider>;
 };

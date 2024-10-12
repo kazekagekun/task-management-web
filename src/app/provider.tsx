@@ -11,6 +11,7 @@ import {
 } from '@mantine/core';
 import { queryConfig } from '../lib/react-query';
 import { Notifications } from '@mantine/notifications';
+import '@mantine/core/styles.css';
 
 type AppProviderProps = {
   children: React.ReactNode;
@@ -56,7 +57,6 @@ export const AppProvider = ({ children }: AppProviderProps) => {
           <QueryClientProvider client={queryClient}>
             <Notifications />
             {import.meta.env.DEV && <ReactQueryDevtools />}
-            <div> Hello World</div>
             {children}
           </QueryClientProvider>
         </MantineProvider>
