@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import dayjs from 'dayjs';
 import {
   Table,
@@ -9,20 +9,25 @@ import {
   Group,
   Text,
 } from '@mantine/core';
-import { IconEdit, IconTrash, IconDots } from '@tabler/icons-react';
+import { IconEdit, IconDots } from '@tabler/icons-react';
 import { useSearchParams } from 'react-router-dom';
 import Loader from '../../../components/ui/Loader';
 import { useTasks } from '../api/GetTasks';
+import { UpdateTaskModal } from './TaskUpdateModal';
+import { z } from 'zod';
+import { useNotification } from '../../../hooks/useNotification';
+import { UpdateTaskSchema } from '../schema';
+import { useUpdateTask } from '../api/UpdateTask';
+import { Task } from '../interface';
 
 type Status = 'Not urgent' | 'Due soon' | 'Overdue';
 
-const getStatus = (dueDate: string): Status => {
+const getStatus = (dueDate: Date): Status => {
   const date = dayjs(dueDate);
   const now = dayjs();
-  const diffDays = date.diff(now, 'day');
 
-  if (diffDays < 0) return 'Overdue';
-  if (diffDays <= 7) return 'Due soon';
+  if (date.isBefore(now)) return 'Overdue';
+  if (date.diff(now, 'day') <= 7) return 'Due soon';
   return 'Not urgent';
 };
 
@@ -33,8 +38,30 @@ const statusColors: Record<Status, string> = {
 };
 
 const TasksList: React.FC = () => {
+  const [modalOpened, setModalOpened] = useState(false);
+  const { showNotification } = useNotification();
+  const updateTaskMutation = useUpdateTask();
   const [searchParams, setSearchParams] = useSearchParams();
+  const [editingTask, setEditingTask] = useState<Task>({
+    id: '',
+    name: '',
+    description: '',
+    dueDate: new Date(),
+    createdAt: new Date(),
+  });
   const page = +(searchParams.get('page') || 1);
+
+  const handleUpdateTask = (updatedTask: z.infer<typeof UpdateTaskSchema>) => {
+    updateTaskMutation.mutate(updatedTask, {
+      onSuccess: () => {
+        showNotification('success', 'Task added successfully');
+        setModalOpened(false);
+      },
+      onError: (error) => {
+        showNotification('error', `Error adding task: ${error}`);
+      },
+    });
+  };
 
   const { data, isLoading, isError, error, refetch } = useTasks({ page });
 
@@ -59,6 +86,7 @@ const TasksList: React.FC = () => {
 
   const rows = tasks.map((task) => (
     <Table.Tr key={task.id}>
+      <Table.Td>{task.id}</Table.Td>
       <Table.Td>{task.name}</Table.Td>
       <Table.Td>{task.description}</Table.Td>
       <Table.Td>{dayjs(task.createdAt).format('DD-MM-YYYY HH:mm:ss')}</Table.Td>
@@ -76,9 +104,14 @@ const TasksList: React.FC = () => {
             </ActionIcon>
           </Menu.Target>
           <Menu.Dropdown>
-            <Menu.Item leftSection={<IconEdit size="1rem" />}>Edit</Menu.Item>
-            <Menu.Item leftSection={<IconTrash size="1rem" />} color="red">
-              Delete
+            <Menu.Item
+              leftSection={<IconEdit size="1rem" />}
+              onClick={() => {
+                setEditingTask(task);
+                setModalOpened(true);
+              }}
+            >
+              Edit
             </Menu.Item>
           </Menu.Dropdown>
         </Menu>
@@ -95,6 +128,7 @@ const TasksList: React.FC = () => {
       <Table>
         <Table.Thead>
           <Table.Tr>
+            <Table.Th>Id</Table.Th>
             <Table.Th>Name</Table.Th>
             <Table.Th>Description</Table.Th>
             <Table.Th>Created Date</Table.Th>
@@ -115,6 +149,21 @@ const TasksList: React.FC = () => {
           onChange={handlePageChange}
         />
       </Group>
+      <UpdateTaskModal
+        data={editingTask}
+        opened={modalOpened}
+        onClose={() => {
+          setModalOpened(false);
+          setEditingTask({
+            id: '',
+            name: '',
+            description: '',
+            dueDate: new Date(),
+            createdAt: new Date(),
+          });
+        }}
+        onSubmit={handleUpdateTask}
+      />
     </>
   );
 };
