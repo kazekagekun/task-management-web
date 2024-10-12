@@ -7,7 +7,7 @@ import { useAddTask } from '../api/AddTask';
 import { useNotification } from '../../../hooks/useNotification';
 import { AddTaskModal } from './TaskAddModal';
 
-const AddTask: React.FC = () => {
+const TaskHeader: React.FC = () => {
   const [modalOpened, setModalOpened] = React.useState(false);
   const { showNotification } = useNotification();
   const addTaskMutation = useAddTask();
@@ -26,7 +26,7 @@ const AddTask: React.FC = () => {
 
   return (
     <>
-      <Group justify="space-between" mb="md">
+      <Group justify="space-between" mb="20">
         <Title order={2}>Task Scheduler</Title>
         <Button
           leftSection={<IconPlus size="1rem" />}
@@ -45,4 +45,4 @@ const AddTask: React.FC = () => {
   );
 };
 
-export default AddTask;
+export default TaskHeader;
