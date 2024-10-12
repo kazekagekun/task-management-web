@@ -22,9 +22,7 @@ export function AppLayout({ children }: AppLayoutProps) {
       </AppShell.Navbar>
 
       <AppShell.Main>
-        <Box style={{ height: '100%', overflow: 'auto' }}>
-          {children}
-        </Box>
+        <Box style={{ height: '100%', overflow: 'auto' }}>{children}</Box>
       </AppShell.Main>
     </AppShell>
   );

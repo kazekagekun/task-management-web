@@ -1,20 +1,14 @@
 import { QueryClient, useQueryClient } from '@tanstack/react-query';
 import { useMemo } from 'react';
-import {
-  RouterProvider,
-  createBrowserRouter,
-} from 'react-router-dom';
+import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import { AppRoot } from './routes/root';
-
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const createAppRouter = (queryClient: QueryClient) =>
   createBrowserRouter([
     {
       path: '/app',
-      element: (
-          <AppRoot />
-      ),
+      element: <AppRoot />,
       children: [
         // {
         //   path: 'discussions',
@@ -40,7 +34,7 @@ const createAppRouter = (queryClient: QueryClient) =>
     //     return { Component: NotFoundRoute };
     //   },
     // },
-]);
+  ]);
 
 export const AppRouter = () => {
   const queryClient = useQueryClient();
