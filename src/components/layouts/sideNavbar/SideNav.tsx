@@ -1,31 +1,20 @@
 import { useState } from 'react';
-import { Group, Code } from '@mantine/core';
+import { Group } from '@mantine/core';
 import {
-  IconBellRinging,
-  IconFingerprint,
-  IconKey,
-  IconSettings,
-  Icon2fa,
-  IconDatabaseImport,
-  IconReceipt2,
-  IconSwitchHorizontal,
   IconLogout,
+  IconChecklist,
 } from '@tabler/icons-react';
 import { MantineLogo } from '@mantinex/mantine-logo';
 import classes from './SideNav.module.css';
+import { useNavigate } from 'react-router-dom';
 
 const data = [
-  { link: '', label: 'Notifications', icon: IconBellRinging },
-  { link: '', label: 'Billing', icon: IconReceipt2 },
-  { link: '', label: 'Security', icon: IconFingerprint },
-  { link: '', label: 'SSH Keys', icon: IconKey },
-  { link: '', label: 'Databases', icon: IconDatabaseImport },
-  { link: '', label: 'Authentication', icon: Icon2fa },
-  { link: '', label: 'Other Settings', icon: IconSettings },
+  { link: '/app/tasks', label: 'Tasks', icon: IconChecklist },
 ];
 
 export function SideNav() {
-  const [active, setActive] = useState('Billing');
+  const [active, setActive] = useState('Tasks');
+  const navigate = useNavigate(); 
 
   const links = data.map((item) => (
     <a
@@ -36,6 +25,7 @@ export function SideNav() {
       onClick={(event) => {
         event.preventDefault();
         setActive(item.label);
+        navigate(item.link);
       }}
     >
       <item.icon className={classes.linkIcon} stroke={1.5} />
@@ -48,21 +38,11 @@ export function SideNav() {
       <div className={classes.navbarMain}>
         <Group className={classes.header} justify="space-between">
           <MantineLogo size={28} />
-          <Code fw={700}>v3.1.2</Code>
         </Group>
         {links}
       </div>
 
       <div className={classes.footer}>
-        <a
-          href="#"
-          className={classes.link}
-          onClick={(event) => event.preventDefault()}
-        >
-          <IconSwitchHorizontal className={classes.linkIcon} stroke={1.5} />
-          <span>Change account</span>
-        </a>
-
         <a
           href="#"
           className={classes.link}

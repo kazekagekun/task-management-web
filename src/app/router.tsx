@@ -2,12 +2,12 @@ import { QueryClient, useQueryClient } from '@tanstack/react-query';
 import { useMemo } from 'react';
 import {
   LoaderFunctionArgs,
+  Navigate,
   RouterProvider,
   createBrowserRouter,
 } from 'react-router-dom';
 import { AppRoot } from './routes/root';
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const createAppRouter = (queryClient: QueryClient) =>
   createBrowserRouter([
     {
@@ -27,13 +27,17 @@ const createAppRouter = (queryClient: QueryClient) =>
         },
       ],
     },
-    // {
-    //   path: '*',
-    //   lazy: async () => {
-    //     const { NotFoundRoute } = await import('./routes/not-found');
-    //     return { Component: NotFoundRoute };
-    //   },
-    // },
+    {
+      path: '/',
+      element: <Navigate to="/app/tasks" replace />,
+    },
+    {
+      path: '*',
+      lazy: async () => {
+        const { NotFoundRoute } = await import('./routes/NotFound/notFound');
+        return { Component: NotFoundRoute };
+      },
+    },
   ]);
 
 export const AppRouter = () => {
