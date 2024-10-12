@@ -1,20 +1,15 @@
 import { useState } from 'react';
 import { Group } from '@mantine/core';
-import {
-  IconLogout,
-  IconChecklist,
-} from '@tabler/icons-react';
+import { IconLogout, IconChecklist } from '@tabler/icons-react';
 import { MantineLogo } from '@mantinex/mantine-logo';
 import classes from './SideNav.module.css';
 import { useNavigate } from 'react-router-dom';
 
-const data = [
-  { link: '/app/tasks', label: 'Tasks', icon: IconChecklist },
-];
+const data = [{ link: '/app/tasks', label: 'Tasks', icon: IconChecklist }];
 
 export function SideNav() {
   const [active, setActive] = useState('Tasks');
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
 
   const links = data.map((item) => (
     <a
