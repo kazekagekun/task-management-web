@@ -29,7 +29,10 @@ const TaskSearch: React.FC = () => {
     refetch();
   }, [searchParams, refetch]);
 
-  const updateSearchParams = (name: string | null, description: string | null) => {
+  const updateSearchParams = (
+    name: string | null,
+    description: string | null,
+  ) => {
     setSearchParams((prev) => {
       if (name) prev.set('name', name);
       else prev.delete('name');
@@ -80,7 +83,10 @@ const TaskSearch: React.FC = () => {
         style={{ flex: 1 }}
         rightSection={
           searchDescription && (
-            <ActionIcon onClick={() => setSearchDescription('')} variant="transparent">
+            <ActionIcon
+              onClick={() => setSearchDescription('')}
+              variant="transparent"
+            >
               <IconX size="1rem" />
             </ActionIcon>
           )
@@ -93,11 +99,7 @@ const TaskSearch: React.FC = () => {
       >
         Search
       </Button>
-      <Button
-        onClick={handleClear}
-        variant="outline"
-        color="gray"
-      >
+      <Button onClick={handleClear} variant="outline" color="gray">
         Clear
       </Button>
     </Group>

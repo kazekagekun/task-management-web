@@ -27,7 +27,7 @@ export const getTasks = (
       sort,
       order,
       name,
-      description
+      description,
     },
   });
 };
@@ -38,7 +38,13 @@ export const getTasksQueryOptions = ({
   order,
   name,
   description,
-}: { page?: number; sort?: string; order?: string, name?: string, description?: string } = {}) => {
+}: {
+  page?: number;
+  sort?: string;
+  order?: string;
+  name?: string;
+  description?: string;
+} = {}) => {
   return queryOptions({
     queryKey: page ? ['tasks', { page }] : ['tasks'],
     queryFn: () => getTasks(page, sort, order, name, description),
@@ -60,7 +66,7 @@ export const useTasks = ({
   sort,
   order,
   name,
-  description
+  description,
 }: UseTasksOptions) => {
   return useQuery({
     ...getTasksQueryOptions({ page, sort, order, name, description }),
