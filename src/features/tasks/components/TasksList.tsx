@@ -18,6 +18,7 @@ import { z } from 'zod';
 import { useNotification } from '../../../hooks/useNotification';
 import { UpdateTaskSchema } from '../schema';
 import { useUpdateTask } from '../api/UpdateTask';
+import TableHeader from '../../../components/ui/Table/TableHeader';
 import { Task } from '../interface';
 
 type Status = 'Not urgent' | 'Due soon' | 'Overdue';
@@ -42,6 +43,27 @@ const TasksList: React.FC = () => {
   const { showNotification } = useNotification();
   const updateTaskMutation = useUpdateTask();
   const [searchParams, setSearchParams] = useSearchParams();
+
+  const page = +(searchParams.get('page') || 1);
+  const sort = searchParams.get('sort') || 'createdAt';
+  const order = searchParams.get('order') || 'desc';
+
+  const { data, isLoading, isError, error, refetch } = useTasks({
+    page,
+    sort,
+    order,
+  });
+  const [sortBy, setSortBy] = useState<keyof Task | null>(null);
+  const [reverseSortDirection, setReverseSortDirection] = useState(false);
+
+  const setSorting = (field: keyof Task) => {
+    const reversed = field === sortBy ? !reverseSortDirection : false;
+    setReverseSortDirection(reversed);
+    setSortBy(field);
+    setSearchParams({ sort: field, order: reversed ? 'desc' : 'asc' });
+    refetch();
+  };
+
   const [editingTask, setEditingTask] = useState<Task>({
     id: '',
     name: '',
@@ -49,7 +71,6 @@ const TasksList: React.FC = () => {
     dueDate: new Date(),
     createdAt: new Date(),
   });
-  const page = +(searchParams.get('page') || 1);
 
   const handleUpdateTask = (updatedTask: z.infer<typeof UpdateTaskSchema>) => {
     updateTaskMutation.mutate(updatedTask, {
@@ -62,8 +83,6 @@ const TasksList: React.FC = () => {
       },
     });
   };
-
-  const { data, isLoading, isError, error, refetch } = useTasks({ page });
 
   useEffect(() => {
     refetch();
@@ -128,11 +147,41 @@ const TasksList: React.FC = () => {
       <Table>
         <Table.Thead>
           <Table.Tr>
-            <Table.Th>Id</Table.Th>
-            <Table.Th>Name</Table.Th>
-            <Table.Th>Description</Table.Th>
-            <Table.Th>Created Date</Table.Th>
-            <Table.Th>Due Date</Table.Th>
+            <TableHeader
+              sorted={sortBy === 'id'}
+              reversed={reverseSortDirection}
+              onSort={() => setSorting('id')}
+            >
+              Id
+            </TableHeader>
+            <TableHeader
+              sorted={sortBy === 'name'}
+              reversed={reverseSortDirection}
+              onSort={() => setSorting('name')}
+            >
+              Name
+            </TableHeader>
+            <TableHeader
+              sorted={sortBy === 'description'}
+              reversed={reverseSortDirection}
+              onSort={() => setSorting('description')}
+            >
+              Description
+            </TableHeader>
+            <TableHeader
+              sorted={sortBy === 'createdAt'}
+              reversed={reverseSortDirection}
+              onSort={() => setSorting('createdAt')}
+            >
+              Created Date
+            </TableHeader>
+            <TableHeader
+              sorted={sortBy === 'dueDate'}
+              reversed={reverseSortDirection}
+              onSort={() => setSorting('dueDate')}
+            >
+              Due Date
+            </TableHeader>
             <Table.Th>Status</Table.Th>
             <Table.Th>Actions</Table.Th>
           </Table.Tr>
