@@ -8,8 +8,10 @@ export const tasksLoader =
     const url = new URL(request.url);
 
     const page = Number(url.searchParams.get('page') || 1);
+    const sort = url.searchParams.get('sort') || 'createdAt';
+    const order = url.searchParams.get('order') || 'desc';
 
-    const query = getTasksQueryOptions({ page });
+    const query = getTasksQueryOptions({ page, sort, order });
 
     return (
       queryClient.getQueryData(query.queryKey) ??

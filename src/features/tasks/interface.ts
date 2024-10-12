@@ -2,8 +2,8 @@ export interface Task {
   id: string;
   name: string;
   description: string;
-  dueDate: string;
-  createdAt: string;
+  dueDate: Date;
+  createdAt?: Date;
 }
 
 export type Meta = {

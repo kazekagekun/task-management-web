@@ -12,6 +12,7 @@ import {
 import { queryConfig } from '../lib/react-query';
 import { Notifications } from '@mantine/notifications';
 import '@mantine/core/styles.css';
+import '@mantine/dates/styles.css';
 
 type AppProviderProps = {
   children: React.ReactNode;
