@@ -51,7 +51,7 @@ const createAppRouter = (queryClient: QueryClient) =>
       },
     },
   ]);
-  
+
 export const AppRouter = () => {
   const queryClient = useQueryClient();
 
@@ -62,5 +62,4 @@ export const AppRouter = () => {
       <RouterProvider router={router} />
     </>
   );
-
 };
