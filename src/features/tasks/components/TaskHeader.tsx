@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Group, Title, Button } from '@mantine/core';
 import { IconPlus } from '@tabler/icons-react';
 import { z } from 'zod';
@@ -8,7 +8,7 @@ import { useNotification } from '../../../hooks/useNotification';
 import { AddTaskModal } from './TaskAddModal';
 
 const TaskHeader: React.FC = () => {
-  const [modalOpened, setModalOpened] = React.useState(false);
+  const [modalOpened, setModalOpened] = useState(false);
   const { showNotification } = useNotification();
   const addTaskMutation = useAddTask();
 
