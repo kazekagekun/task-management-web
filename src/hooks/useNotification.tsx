@@ -1,4 +1,5 @@
 import { notifications } from '@mantine/notifications';
+import '@mantine/notifications/styles.css';
 
 type NotificationType = 'error' | 'info' | 'success';
 
@@ -28,6 +29,7 @@ export const useNotification = () => {
       message: message,
       color: config.color,
       icon: config.icon,
+      position: 'top-right',
     });
   };
 

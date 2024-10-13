@@ -7,15 +7,27 @@ import {
   createBrowserRouter,
 } from 'react-router-dom';
 import { AppRoot } from './routes/root';
+import { ProtectedRoute } from '../lib/protectedRoute';
 
 const createAppRouter = (queryClient: QueryClient) =>
   createBrowserRouter([
     {
+      path: '/auth/login',
+      lazy: async () => {
+        const { LoginRoute } = await import('./routes/auth/login');
+        return { Component: LoginRoute };
+      },
+    },
+    {
       path: '/app',
-      element: <AppRoot />,
+      element: (
+        <ProtectedRoute>
+          <AppRoot />
+        </ProtectedRoute>
+      ),
       children: [
         {
-          path: 'tasks',
+          path: '',
           lazy: async () => {
             const { TasksRoute } = await import('./routes/tasks/tasks');
             return { Component: TasksRoute };
@@ -29,7 +41,7 @@ const createAppRouter = (queryClient: QueryClient) =>
     },
     {
       path: '/',
-      element: <Navigate to="/app/tasks" replace />,
+      element: <Navigate to="/app" replace />,
     },
     {
       path: '*',
@@ -39,11 +51,16 @@ const createAppRouter = (queryClient: QueryClient) =>
       },
     },
   ]);
-
+  
 export const AppRouter = () => {
   const queryClient = useQueryClient();
 
   const router = useMemo(() => createAppRouter(queryClient), [queryClient]);
 
-  return <RouterProvider router={router} />;
+  return (
+    <>
+      <RouterProvider router={router} />
+    </>
+  );
+
 };

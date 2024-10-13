@@ -75,7 +75,7 @@ const TasksList: React.FC = () => {
   const handleUpdateTask = (updatedTask: z.infer<typeof UpdateTaskSchema>) => {
     updateTaskMutation.mutate(updatedTask, {
       onSuccess: () => {
-        showNotification('success', 'Task added successfully');
+        showNotification('success', 'Task updated successfully');
         setModalOpened(false);
       },
       onError: (error) => {

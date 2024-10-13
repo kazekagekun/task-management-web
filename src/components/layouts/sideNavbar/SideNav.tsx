@@ -4,12 +4,25 @@ import { IconLogout, IconChecklist } from '@tabler/icons-react';
 import { MantineLogo } from '@mantinex/mantine-logo';
 import classes from './SideNav.module.css';
 import { useNavigate } from 'react-router-dom';
+import { useLogout } from '../../../lib/auth';
 
 const data = [{ link: '/app/tasks', label: 'Tasks', icon: IconChecklist }];
 
 export function SideNav() {
+  const { mutate: logout, isPending } = useLogout();
   const [active, setActive] = useState('Tasks');
   const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout(undefined, {
+      onSuccess: () => {
+        navigate('/auth/login');
+      },
+      onError: (error) => {
+        console.error('Logout failed:', error);
+      },
+    });
+  };
 
   const links = data.map((item) => (
     <a
@@ -41,10 +54,13 @@ export function SideNav() {
         <a
           href="#"
           className={classes.link}
-          onClick={(event) => event.preventDefault()}
+          onClick={(event) => {
+            event.preventDefault();
+            handleLogout();
+          }}
         >
           <IconLogout className={classes.linkIcon} stroke={1.5} />
-          <span>Logout</span>
+          <span>{isPending ? 'Logging out...' : 'Logout'}</span>
         </a>
       </div>
     </nav>
