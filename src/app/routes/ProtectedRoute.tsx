@@ -1,5 +1,5 @@
 import { useLocation, Navigate } from 'react-router-dom';
-import { useUser } from './auth';
+import { useUser } from '../../lib/auth';
 
 export const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const user = useUser();
