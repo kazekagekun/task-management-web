@@ -22,6 +22,10 @@ jobs:
       - name: Install dependencies
         uses: bahmutov/npm-install@v1
 
+      - name: Create ENV file
+        run: |
+          echo "VITE_APP_API_URL=https://3exnq3xnje.ap-southeast-1.awsapprunner.com/api" > .env
+
       - name: Build project
         run: npm run build
 
