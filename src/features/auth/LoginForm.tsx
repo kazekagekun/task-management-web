@@ -26,7 +26,9 @@ export const LoginForm: React.FC = () => {
     validate: zodResolver(LoginSchema),
   });
 
-  const handleSubmit = (values: LoginFormValues) => {
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const values = form.values;
     login(values);
   };
 
@@ -37,7 +39,7 @@ export const LoginForm: React.FC = () => {
   }, [isSuccess, navigate]);
 
   return (
-    <form onSubmit={form.onSubmit(handleSubmit)}>
+    <form onSubmit={handleSubmit}>
       <Stack>
         <TextInput
           label="Email address"
