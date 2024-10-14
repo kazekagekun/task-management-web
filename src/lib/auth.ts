@@ -7,6 +7,7 @@ import {
 } from '@tanstack/react-query';
 import { AxiosError, AxiosResponse } from 'axios';
 import { api } from './api-client';
+import { useNotification } from '../hooks/useNotification';
 
 interface User {
   id: string;
@@ -37,6 +38,7 @@ export const useLogin = (
   unknown
 > => {
   const queryClient = useQueryClient();
+  const { showNotification } = useNotification();
 
   return useMutation({
     mutationFn: (credentials: LoginCredentials) =>
@@ -53,6 +55,13 @@ export const useLogin = (
         options.onSuccess(data);
       }
     },
+    onError: (error) => {
+      console.log(error);
+      showNotification(
+        'error',
+        (error.response?.data as { message: string }).message,
+      );
+    },
   });
 };
 
@@ -63,6 +72,7 @@ export const useLogout = (): UseMutationResult<
   unknown
 > => {
   const queryClient = useQueryClient();
+  const { showNotification } = useNotification();
 
   return useMutation({
     mutationFn: () => api.post('/auth/logout'),
@@ -70,6 +80,9 @@ export const useLogout = (): UseMutationResult<
       clearTokens();
       delete api.defaults.headers.common['Authorization'];
       queryClient.setQueryData(['user'], null);
+    },
+    onError: (error) => {
+      showNotification('error', error.message);
     },
   });
 };

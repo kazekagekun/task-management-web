@@ -5,12 +5,15 @@ import { MantineLogo } from '@mantinex/mantine-logo';
 import classes from './SideNav.module.css';
 import { useNavigate } from 'react-router-dom';
 import { useLogout } from '../../../lib/auth';
+import { AxiosError } from 'axios';
+import { useNotification } from '../../../hooks/useNotification';
 
 const data = [{ link: '/app/tasks', label: 'Tasks', icon: IconChecklist }];
 
 export function SideNav() {
   const { mutate: logout, isPending } = useLogout();
   const [active, setActive] = useState('Tasks');
+  const { showNotification } = useNotification();
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -19,7 +22,14 @@ export function SideNav() {
         navigate('/auth/login');
       },
       onError: (error) => {
-        console.error('Logout failed:', error);
+        if (error instanceof AxiosError && error.response) {
+          showNotification(
+            'error',
+            (error.response?.data as { message: string }).message,
+          );
+        } else {
+          showNotification('error', 'An unexpected error occurred');
+        }
       },
     });
   };

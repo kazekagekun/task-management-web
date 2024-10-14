@@ -7,22 +7,7 @@ export const api = Axios.create({
   baseURL: env.API_URL,
 });
 
-api.interceptors.response.use(
-  (response) => response,
-  (error) => {
-    if (error.response) {
-      // Server responded with a status other than 200 range
-      console.error('Server Error:', error.response.data);
-    } else if (error.request) {
-      // Request was made but no response received
-      console.error('Network Error:', error.request);
-    } else {
-      // Something else happened while setting up the request
-      console.error('Error:', error.message);
-    }
-    return Promise.reject(error);
-  },
-);
+const excludedUrls = ['/auth/refresh', '/auth/login', '/auth/logout'];
 
 api.interceptors.response.use(
   (response) => response,
@@ -31,13 +16,22 @@ api.interceptors.response.use(
     if (error.response.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
       try {
+        if (
+          originalRequest &&
+          excludedUrls.some((url) => originalRequest.url?.includes(url))
+        ) {
+          return Promise.reject(error);
+        }
+
         const refreshToken = getRefreshToken();
         const response = await api.post('/auth/refresh', {
           refreshToken,
         });
+
         const { accessToken } = response.data;
         setTokens(accessToken, refreshToken as string);
         api.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
+        api.defaults.headers.common['testUrl'] = `originalRequest.url`;
         return api(originalRequest);
       } catch (refreshError) {
         clearTokens();
